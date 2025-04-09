@@ -24,8 +24,20 @@ extension AppDelegate: PKPushRegistryDelegate {
         UserDefaults.standard.voipPushToken = pushCredentials.token
         print("Push token is \(pushCredentials.token.toHexString())")
         
-        SendBirdCall.registerVoIPPush(token: pushCredentials.token, unique: true) { error in
-            guard error == nil else { return }
+        guard SendBirdCall.currentUser != nil else {
+            print("No logged in user.")
+            return
+        }
+        self.registerVoIPPushToken(token: pushCredentials.token)
+    }
+    
+    func registerVoIPPushToken(token: Data) {
+        SendBirdCall.registerVoIPPush(token: token, unique: true) { error in
+            if let error {
+                print("Error registering VoIP push token: \(error.localizedDescription)")
+                return
+            }
+            print("Successfully registered VoIP push token.")
         }
     }
     
