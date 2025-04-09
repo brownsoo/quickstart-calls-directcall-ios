@@ -128,6 +128,7 @@ extension CXCallManager: CXProviderDelegate {
     }
     
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
+        debugPrint("CXCallManager: End Call Action !!! ****")
         // Retrieve the SpeakerboxCall instance corresponding to the action's call UUID
         guard let call = SendBirdCall.getCall(forUUID: action.callUUID) else {
             action.fail()
