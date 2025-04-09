@@ -32,8 +32,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // SendBirdCall.configure(appId: appId)
         // UserDefaults.standard.designatedAppId = appId
 
-        self.autoSignIn { error in
-            if error == nil { return }
+        self.autoSignIn { [weak self] error in
+            guard let self else { return }
+            if error == nil {
+                if let token = UserDefaults.standard.voipPushToken {
+                    self.registerVoIPPushToken(token: token)
+                }
+                return
+            }
             // Show SignIn controller when failed to auto sign in
             self.window?.rootViewController?.present(UIStoryboard.signController(), animated: true, completion: nil)
         }
