@@ -36,6 +36,8 @@ class DialViewController: UIViewController, UITextFieldDelegate {
         NotificationCenter.observeKeyboard(showAction: #selector(keyboardWillShow(_:)),
                                            hideAction: #selector(keyboardWillHide(_:)),
                                            target: self)
+        
+        requestNotificationPermission()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -47,6 +49,19 @@ class DialViewController: UIViewController, UITextFieldDelegate {
             dataSource.call = call
             dataSource.isDialing = true
         }
+    }
+    
+    private func requestNotificationPermission() {
+        let center = UNUserNotificationCenter.current()
+        // set the type as sound or badge
+        center.requestAuthorization(options: [.sound,.alert,.badge]) { (granted, error) in
+            if granted {
+                print("Notification Enable Successfully")
+            }else{
+                print("Some Error Occure")
+            }
+        }
+        UIApplication.shared.registerForRemoteNotifications()
     }
 }
 
